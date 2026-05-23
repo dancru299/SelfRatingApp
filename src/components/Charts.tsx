@@ -43,7 +43,7 @@ export function TrendChart({ entries, previewScores }: TrendChartProps) {
   }));
 
   return (
-    <div className="chart-card">
+    <div className="card chart-card">
       <div className="section-head section-head--tight">
         <div>
           <h3>Biểu đồ xu hướng</h3>
@@ -133,7 +133,7 @@ export function RadarChart({ entries }: RadarChartProps) {
     .join(" ") + " Z";
 
   return (
-    <div className="chart-card chart-card--radar">
+    <div className="card chart-card chart-card--radar">
       <div className="section-head section-head--tight">
         <div>
           <h3>Tổng quan (7 ngày)</h3>
@@ -174,7 +174,7 @@ type HeatmapCardProps = {
 export function HeatmapCard({ entries }: HeatmapCardProps) {
   const dates = getWeekDates(28);
   return (
-    <div className="chart-card heatmap-card">
+    <div className="card chart-card heatmap-card">
       <div className="section-head section-head--tight">
         <div>
           <h3>Lịch sử</h3>

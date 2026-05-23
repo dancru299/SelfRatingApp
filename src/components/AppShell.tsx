@@ -6,7 +6,7 @@ import {
   Bell,
   Flame,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Profile, ViewKey } from "../types";
 import { navItems } from "../data";
 import { formatLongDate } from "../utils";
@@ -28,9 +28,21 @@ export function AppShell({
   profile,
   children,
 }: Props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleNavClick = (key: ViewKey) => {
+    onViewChange(key);
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <div
+        className={`sidebar-overlay${sidebarOpen ? " is-visible" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden="true"
+      />
+      <aside className={`sidebar${sidebarOpen ? " is-open" : ""}`}>
         <div className="brand-mark">
           <span className="brand-mark__glyph" aria-hidden="true">
             <Flame size={18} />
@@ -50,7 +62,7 @@ export function AppShell({
                 key={item.key}
                 type="button"
                 className={`side-nav__item ${isActive ? "is-active" : ""}`}
-                onClick={() => onViewChange(item.key as ViewKey)}
+                onClick={() => handleNavClick(item.key as ViewKey)}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>
@@ -59,7 +71,7 @@ export function AppShell({
           })}
         </nav>
 
-        <button type="button" className="sidebar__cta" onClick={onQuickCheckIn}>
+        <button type="button" className="sidebar__cta" onClick={() => { onQuickCheckIn(); setSidebarOpen(false); }}>
           <Plus size={16} />
           <span>Chấm nhanh</span>
           <ChevronRight size={16} />
@@ -84,7 +96,7 @@ export function AppShell({
 
       <main className="workspace">
         <header className="topbar">
-          <button type="button" className="topbar__menu" aria-label="Mở menu">
+          <button type="button" className="topbar__menu" aria-label="Mở menu" onClick={() => setSidebarOpen(true)}>
             <Menu size={20} />
           </button>
           <div className="topbar__intro">

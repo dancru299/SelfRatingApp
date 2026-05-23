@@ -1135,13 +1135,41 @@ img {
   display: none;
 }
 
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.is-visible {
+  display: block;
+}
+
 @media (max-width: 1240px) {
   .app-shell {
     grid-template-columns: 1fr;
   }
 
+  /* Sidebar becomes a fixed slide-in drawer on tablet/mobile */
   .sidebar {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 50;
+    border-radius: 0 32px 32px 0;
+    overflow-y: auto;
+    transform: translateX(-110%);
+    transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
   }
 
   .dashboard-grid,
@@ -1149,13 +1177,13 @@ img {
     grid-template-columns: 1fr;
   }
 
-  .content-row,
+  /* content-row (Trend + Radar) keeps 2 columns when sidebar disappears */
   .content-row--bottom {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .history-card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1174,24 +1202,20 @@ img {
     max-width: 100%;
   }
 
-  .history-hero,
-  .topbar {
-    grid-template-columns: 1fr;
+  /* history-hero is flex, use flex-direction instead of grid rule */
+  .history-hero {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
+  /* topbar stays 3-column, just show the menu button */
   .topbar__menu {
     display: inline-grid;
     place-items: center;
   }
 
-  .topbar__actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .history-card-grid,
-  .settings-grid {
-    grid-template-columns: 1fr;
+  .history-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1205,16 +1229,46 @@ img {
     padding-bottom: 120px;
   }
 
+  /* Topbar: row 1 = menu + actions, row 2 = intro text */
+  .topbar {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 12px 16px;
+  }
+
+  .topbar__menu {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+  }
+
   .topbar__intro {
-    order: 2;
+    grid-row: 2;
+    grid-column: 1 / -1;
   }
 
   .topbar__actions {
-    order: 3;
+    grid-row: 1;
+    grid-column: 2;
+    justify-content: flex-end;
+    gap: 10px;
+    width: auto;
+  }
+
+  /* Collapse content rows to single column */
+  .content-row,
+  .content-row--bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
   }
 
   .mobile-nav {
-    position: sticky;
+    position: fixed;
+    left: 14px;
+    right: 14px;
     bottom: 14px;
     z-index: 20;
     display: grid;
@@ -1254,23 +1308,32 @@ img {
 
   .button--primary,
   .button--secondary,
-  .button--ghost,
-  .chip-button {
+  .button--ghost {
     width: 100%;
   }
 
-  .topbar__actions {
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .rating-row,
-  .benchmark-row {
+  /* rating-row stacks on mobile, benchmark-row stays inline */
+  .rating-row {
     grid-template-columns: 1fr;
   }
 
   .rating-row__dots {
     grid-template-columns: repeat(5, 1fr);
+  }
+
+  /* benchmark-row stays 3 columns on mobile (label | track | score) */
+  .benchmark-row {
+    gap: 10px;
+  }
+
+  /* Allow section-head chips to wrap on narrow screens */
+  .section-head {
+    flex-wrap: wrap;
+  }
+
+  /* Hide auth hero image on mobile to save vertical space */
+  .auth-visual {
+    display: none;
   }
 }
 
